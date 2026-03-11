@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Staff Register | UNIMarket</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<nav class="navbar navbar-expand-lg topbar" aria-label="Staff navigation">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="../index.html"><span class="brand-mark">U</span>UNIMarket</a>
+    <div class="navbar-text">Staff account setup</div>
+  </div>
+</nav>
+
+<main id="main" class="auth-page container">
+  <section class="auth-shell">
+    <aside class="auth-side auth-side-staff">
+      <span class="auth-chip">Staff Portal</span>
+      <h1 id="staffRegTitle" class="auth-title">Create a staff account</h1>
+      <p class="auth-subtitle">Register staff credentials to access dashboard, order processing, and inventory management.</p>
+      <ul class="auth-points">
+        <li>Dedicated staff-only account type</li>
+        <li>Unified dashboard for operations</li>
+        <li>Stock and order workflow integration</li>
+      </ul>
+    </aside>
+    <section class="auth-card-wrap">
+      <div class="auth-card panel" aria-labelledby="staffRegTitle">
+        <div class="panel-head"><h2 class="h5 mb-0">Staff Registration</h2></div>
+        <div class="panel-body">
+          <form id="staffRegisterForm" class="auth-form" novalidate>
+            <div>
+              <label for="userId" class="form-label">Staff User ID</label>
+              <input id="userId" name="userId" class="form-control" required>
+            </div>
+            <div>
+              <label for="email" class="form-label">Staff Email</label>
+              <input id="email" name="email" type="email" class="form-control" required>
+            </div>
+            <div>
+              <label for="password" class="form-label">Password</label>
+              <input id="password" name="password" type="password" class="form-control" required>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="submit" class="btn-primary-app">Create Staff Account</button>
+              <a href="staff-login.html" class="btn-soft">Back to Staff Login</a>
+            </div>
+          </form>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script src="../assets/js/app.js"></script>
+</body>
+</html>
