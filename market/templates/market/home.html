@@ -1,0 +1,10 @@
+{% extends 'market/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Welcome to UOG UNIMarket</h2>
+        <p>Browse our products and place your orders.</p>
+        <a href="{% url 'customer_logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+{% endblock %}
