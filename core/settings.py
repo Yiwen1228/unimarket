@@ -131,3 +131,17 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ]
 }
+
+# WebSocket 消息通道层配置
+CHANNEL_LAYERS = {
+    "default": {
+        # 本地开发环境：使用内存作为消息队列
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        
+        # 生产环境预留（部署到 Render 时，Yiwen 需要配置 Redis）
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [('127.0.0.1', 6379)],
+        # },
+    },
+}
