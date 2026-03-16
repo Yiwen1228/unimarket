@@ -8,6 +8,8 @@ urlpatterns = [
     path('staff/login/', api_views.staff_login, name='api_staff_login'),
     path('logout/', api_views.logout, name='api_logout'),
     path('verify/', api_views.verify_email_api, name='api_verify_email'),
+    path('forgot-password/', api_views.forgot_password, name='api_forgot_password'),
+    path('reset-password/', api_views.reset_password, name='api_reset_password'),
     path('customer/profile/', api_views.customer_profile, name='api_customer_profile'),
     path('products/', api_views.product_list, name='api_products'),
     path('products/publish/', api_views.publish_product, name='api_publish_product'),
@@ -33,6 +35,7 @@ urlpatterns = [
     path('notifications/', api_views.notification_list, name='api_notifications'),
     path('notifications/count/', api_views.notification_count, name='api_notification_count'),
     path('notifications/<int:notif_id>/read/', api_views.notification_mark_read, name='api_notification_read'),
+    path('notifications/<int:notif_id>/delete/', api_views.notification_delete, name='api_notification_delete'),
     path('chat/rooms/', api_views.chat_rooms, name='api_chat_rooms'),
     path('chat/rooms/<str:room_name>/delete/', api_views.delete_chat_room, name='api_delete_chat_room'),
 ]

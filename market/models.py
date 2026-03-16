@@ -7,6 +7,8 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=20, blank=True)
     is_verified = models.BooleanField(default=False)
     verification_token = models.CharField(max_length=64, blank=True, default='')
+    password_reset_token = models.CharField(max_length=64, blank=True, default='')
+    password_reset_expires = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.username

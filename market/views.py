@@ -22,7 +22,6 @@ def customer_register(request):
         username = request.POST.get('username', '')
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-        phone = request.POST.get('phone_number', '')
         if not username or not email or not password:
             messages.error(request, 'All fields are required.')
             return render(request, 'market/customer_register.html')
@@ -35,14 +34,17 @@ def customer_register(request):
         elif Customer.objects.filter(email=email).exists():
             messages.error(request, 'Email already exists.')
         else:
-            Customer.objects.create(
+            token = secrets.token_urlsafe(32)
+            customer = Customer.objects.create(
                 username=username,
                 email=email,
                 password=make_password(password),
-                phone_number=phone,
-                is_verified=True,
+                is_verified=False,
+                verification_token=token,
             )
-            messages.success(request, 'Registration successful! You can now log in.')
+            from .utils import send_verification_email
+            send_verification_email(customer, request)
+            messages.success(request, 'Registration successful! Please check your email to verify your account.')
             return redirect('customer_login')
     return render(request, 'market/customer_register.html')
 
@@ -240,3 +242,58 @@ def verify_email(request):
     except Customer.DoesNotExist:
         messages.error(request, 'Invalid or expired verification link.')
     return redirect('customer_login')
+
+
+def forgot_password_page(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        if email:
+            try:
+                customer = Customer.objects.get(email=email)
+                token = secrets.token_urlsafe(32)
+                customer.password_reset_token = token
+                from django.utils import timezone
+                from datetime import timedelta
+                customer.password_reset_expires = timezone.now() + timedelta(hours=1)
+                customer.save()
+                from .utils import send_password_reset_email
+                send_password_reset_email(customer, request)
+            except Customer.DoesNotExist:
+                pass  # Don't reveal whether the email exists
+        messages.success(request, 'If that email is registered, a reset link has been sent.')
+        return redirect('customer_login')
+    return render(request, 'market/forgot_password.html')
+
+
+def reset_password_page(request):
+    token = request.GET.get('token', '') or request.POST.get('token', '')
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        confirm = request.POST.get('confirm_password', '')
+        if password != confirm:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'market/reset_password.html', {'token': token})
+        pw_err = _password_ok(password)
+        if pw_err:
+            messages.error(request, pw_err)
+            return render(request, 'market/reset_password.html', {'token': token})
+        try:
+            customer = Customer.objects.get(password_reset_token=token)
+        except Customer.DoesNotExist:
+            messages.error(request, 'Invalid or expired reset link.')
+            return redirect('customer_login')
+        from django.utils import timezone
+        if not customer.password_reset_expires or customer.password_reset_expires < timezone.now():
+            messages.error(request, 'This reset link has expired.')
+            return redirect('customer_login')
+        customer.password = make_password(password)
+        customer.password_reset_token = ''
+        customer.password_reset_expires = None
+        customer.save()
+        messages.success(request, 'Password reset successfully. You can now log in.')
+        return redirect('customer_login')
+    # GET
+    if not token:
+        messages.error(request, 'Invalid reset link.')
+        return redirect('customer_login')
+    return render(request, 'market/reset_password.html', {'token': token})

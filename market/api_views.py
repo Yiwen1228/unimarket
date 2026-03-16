@@ -76,13 +76,17 @@ def customer_register(request):
     if Customer.objects.filter(email=email).exists():
         return Response({'error': 'Email already exists.'}, status=400)
 
+    token = secrets.token_urlsafe(32)
     customer = Customer.objects.create(
         username=username,
         email=email,
         password=make_password(password),
-        is_verified=True,
+        is_verified=False,
+        verification_token=token,
     )
-    return Response({'message': 'Account created successfully.', 'userId': customer.username}, status=201)
+    from .utils import send_verification_email
+    send_verification_email(customer, request)
+    return Response({'message': 'Account created. Please check your email to verify your account.', 'userId': customer.username}, status=201)
 
 @api_view(['POST'])
 def customer_login(request):
@@ -484,7 +488,7 @@ def toggle_product_active(request, product_id):
             create_notification(
                 'customer', product.seller_id,
                 f'Your product "{product.product_name}" has been {action} by staff.',
-                '/home/'
+                '/'
             )
         return Response({'message': f'Product {action}.', 'is_active': product.is_active})
     except Product.DoesNotExist:
@@ -642,6 +646,51 @@ def verify_email_api(request):
         return Response({'error': 'Invalid or expired token.'}, status=400)
 
 
+# ── Forgot / Reset Password ──────────────────────────────────
+
+@api_view(['POST'])
+def forgot_password(request):
+    email = request.data.get('email', '').strip()
+    if not email:
+        return Response({'error': 'Email is required.'}, status=400)
+    try:
+        customer = Customer.objects.get(email=email)
+        token = secrets.token_urlsafe(32)
+        customer.password_reset_token = token
+        from django.utils import timezone
+        from datetime import timedelta
+        customer.password_reset_expires = timezone.now() + timedelta(hours=1)
+        customer.save()
+        from .utils import send_password_reset_email
+        send_password_reset_email(customer, request)
+    except Customer.DoesNotExist:
+        pass  # Don't reveal whether the email exists
+    return Response({'message': 'If that email is registered, a reset link has been sent.'})
+
+
+@api_view(['POST'])
+def reset_password(request):
+    token = request.data.get('token', '').strip()
+    new_password = request.data.get('password', '')
+    if not token or not new_password:
+        return Response({'error': 'Token and password are required.'}, status=400)
+    pw_err = validate_password(new_password)
+    if pw_err:
+        return Response({'error': pw_err}, status=400)
+    try:
+        customer = Customer.objects.get(password_reset_token=token)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Invalid or expired token.'}, status=400)
+    from django.utils import timezone
+    if not customer.password_reset_expires or customer.password_reset_expires < timezone.now():
+        return Response({'error': 'Invalid or expired token.'}, status=400)
+    customer.password = make_password(new_password)
+    customer.password_reset_token = ''
+    customer.password_reset_expires = None
+    customer.save()
+    return Response({'message': 'Password reset successfully. You can now log in.'})
+
+
 # ── Notifications ─────────────────────────────────────────────
 
 @api_view(['GET'])
@@ -685,6 +734,23 @@ def notification_mark_read(request, notif_id):
         notif.is_read = True
         notif.save()
         return Response({'message': 'Marked as read.'})
+    except Notification.DoesNotExist:
+        return Response({'error': 'Notification not found.'}, status=404)
+
+
+@api_view(['DELETE'])
+def notification_delete(request, notif_id):
+    role = request.session.get('role')
+    if role == 'customer':
+        rid = request.session.get('customer_id')
+    elif role == 'staff':
+        rid = request.session.get('staff_id')
+    else:
+        return Response({'error': 'Not authenticated.'}, status=401)
+    try:
+        notif = Notification.objects.get(id=notif_id, recipient_type=role, recipient_id=rid)
+        notif.delete()
+        return Response({'message': 'Notification deleted.'})
     except Notification.DoesNotExist:
         return Response({'error': 'Notification not found.'}, status=404)
 
