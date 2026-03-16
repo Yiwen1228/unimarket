@@ -131,10 +131,18 @@ if IS_RENDER:
         'staticfiles': {
             'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
         },
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
     }
+else:
+    pass
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if IS_RENDER:
+    MEDIA_ROOT = '/var/data'  
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # ──────────────────────────────────────────────────────────────
