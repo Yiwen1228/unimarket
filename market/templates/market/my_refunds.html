@@ -1,0 +1,15 @@
+{% extends 'market/base.html' %}
+{% load static %}
+{% block title %}My Refunds - UofG UNIMarket{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4">My Refund Requests</h1>
+
+<div id="refunds-container" aria-live="polite">
+    <p class="text-muted">Loading refund requests...</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'market/js/refunds.js' %}"></script>
+{% endblock %}

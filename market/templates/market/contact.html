@@ -1,0 +1,76 @@
+{% extends 'market/base.html' %}
+{% block title %}Contact - UofG UNIMarket{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <h1 class="h2 mb-4">Contact Us</h1>
+
+        <div class="row g-4">
+            <!-- Contact information -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3"><i class="bi bi-geo-alt" aria-hidden="true"></i> Visit Us</h2>
+                        <address class="mb-4">
+                            UofG UNIMarket<br>
+                            University of Glasgow<br>
+                            University Avenue<br>
+                            Glasgow, G12 8QQ<br>
+                            United Kingdom
+                        </address>
+
+                        <h2 class="h5 mb-3"><i class="bi bi-clock" aria-hidden="true"></i> Opening Hours</h2>
+                        <table class="table table-sm" aria-label="Opening hours">
+                            <tbody>
+                                <tr><td>Monday &ndash; Friday</td><td>8:00 AM &ndash; 8:00 PM</td></tr>
+                                <tr><td>Saturday</td><td>9:00 AM &ndash; 6:00 PM</td></tr>
+                                <tr><td>Sunday</td><td>10:00 AM &ndash; 4:00 PM</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact channels -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3"><i class="bi bi-envelope" aria-hidden="true"></i> Get In Touch</h2>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <strong><i class="bi bi-envelope-at" aria-hidden="true"></i> Email</strong><br>
+                                <span class="text-muted">support@unimarket.gla.ac.uk</span>
+                            </li>
+                            <li class="mb-3">
+                                <strong><i class="bi bi-telephone" aria-hidden="true"></i> Phone</strong><br>
+                                <span class="text-muted">+44 (0)141 330 2000</span>
+                            </li>
+                            <li class="mb-3">
+                                <strong><i class="bi bi-chat-dots" aria-hidden="true"></i> Live Chat</strong><br>
+                                <span class="text-muted">
+                                    Log in and visit the
+                                    {% if request.session.role == 'customer' %}
+                                    <a href="{% url 'chat' %}">Chat</a>
+                                    {% else %}
+                                    Chat
+                                    {% endif %}
+                                    page for real-time support during opening hours.
+                                </span>
+                            </li>
+                        </ul>
+
+                        <h2 class="h5 mb-3 mt-4"><i class="bi bi-question-circle" aria-hidden="true"></i> FAQs</h2>
+                        <p class="text-muted small mb-1"><strong>How do I place an order?</strong><br>
+                            Browse our Products page, add items to your cart, and click Place Order.</p>
+                        <p class="text-muted small mb-1"><strong>Can I cancel an order?</strong><br>
+                            Contact staff via live chat before the order is marked as Processing.</p>
+                        <p class="text-muted small mb-0"><strong>Do you deliver?</strong><br>
+                            Currently we offer in-store collection only.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,10 +1,125 @@
 {% extends 'market/base.html' %}
+{% load static %}
+{% block title %}Dashboard - UofG UNIMarket{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Welcome to UOG UNIMarket</h2>
-        <p>Browse our products and place your orders.</p>
-        <a href="{% url 'customer_logout' %}" class="btn btn-danger">Logout</a>
+<!-- Product cards row -->
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-lg-4" id="dash-product-1">
+        <div class="card product-card h-100">
+            <div class="product-img-placeholder" aria-label="Product image placeholder">Product</div>
+            <div class="card-body">
+                <p class="text-muted small">Browse our latest products and find great deals.</p>
+                <a href="{% url 'products' %}" class="btn btn-sm btn-primary" aria-label="View products">View Products</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-4" id="dash-product-2">
+        <div class="card product-card h-100">
+            <div class="product-img-placeholder" aria-label="Product image placeholder">Product</div>
+            <div class="card-body">
+                <p class="text-muted small">Check your saved items and favourites list.</p>
+                <a href="{% url 'favorites' %}" class="btn btn-sm btn-outline-danger" aria-label="View favorites">
+                    <i class="bi bi-heart" aria-hidden="true"></i> Favorites
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-4" id="dash-product-3">
+        <div class="card product-card h-100">
+            <div class="product-img-placeholder" aria-label="Product image placeholder">Product</div>
+            <div class="card-body">
+                <p class="text-muted small">Need help? Chat with our support staff in real time.</p>
+                <a href="{% url 'chat' %}" class="btn btn-sm btn-outline-info" aria-label="Start chat">
+                    <i class="bi bi-chat-dots" aria-hidden="true"></i> Start Chat
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Publish Product Section -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="bi bi-plus-circle" aria-hidden="true"></i> Publish a Product</h2>
+            </div>
+            <div class="card-body">
+                <form id="publish-form" aria-label="Publish a product">
+                    <div class="mb-3">
+                        <label for="pub-name" class="form-label">Product Name</label>
+                        <input type="text" id="pub-name" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="pub-category" class="form-label">Category</label>
+                            <select id="pub-category" class="form-select">
+                                <option value="General">Loading...</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="pub-price" class="form-label">Price (&pound;)</label>
+                            <input type="number" id="pub-price" class="form-control" step="0.01" min="0.01" required aria-required="true">
+                        </div>
+                        <div class="col-3">
+                            <label for="pub-stock" class="form-label">Stock</label>
+                            <input type="number" id="pub-stock" class="form-control" min="1" value="1">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pub-desc" class="form-label">Description (optional)</label>
+                        <textarea id="pub-desc" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pub-image" class="form-label">Product Image (optional)</label>
+                        <input type="file" id="pub-image" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload" aria-hidden="true"></i> Publish Product
+                    </button>
+                </form>
+                <div id="publish-feedback" class="mt-2" role="status" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Published Products -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="bi bi-box-seam" aria-hidden="true"></i> My Published Products</h2>
+            </div>
+            <div class="card-body" style="max-height:500px;overflow-y:auto">
+                <div id="my-products-container" aria-live="polite">
+                    <p class="text-muted">Loading your products...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom sections: Recent Activity + Account Status -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><h2 class="h5 mb-0"><i class="bi bi-clock-history" aria-hidden="true"></i> Recent Activity</h2></div>
+            <div class="card-body" id="recent-activity" aria-live="polite">
+                <p class="text-muted">Loading...</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><h2 class="h5 mb-0"><i class="bi bi-person-check" aria-hidden="true"></i> Account Status</h2></div>
+            <div class="card-body" id="account-status" aria-live="polite">
+                <p class="text-muted">Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'market/js/dashboard.js' %}"></script>
 {% endblock %}
