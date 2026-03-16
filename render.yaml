@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: unimarket
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "daphne -b 0.0.0.0 -p $PORT core.asgi:application"
+    envVars:
+      - key: RENDER
+        value: "1"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.11.6"
+
+databases:
+  - name: unimarket-db
+    plan: free
+    databaseName: unimarket
+    user: unimarket
