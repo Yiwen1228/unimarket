@@ -1,0 +1,37 @@
+/* Print-specific styles — hides non-essential UI for clean invoices */
+@media print {
+    .sidebar,
+    .top-header,
+    .newsletter-banner,
+    footer,
+    .sidebar-overlay,
+    .skip-link,
+    .offcanvas,
+    #cartPanel,
+    #dark-mode-toggle,
+    #notif-bell,
+    .sidebar-toggle,
+    .btn,
+    .refund-btn,
+    .chat-btn,
+    .print-invoice-btn,
+    .export-csv-btn,
+    nav[aria-label="Main navigation"],
+    nav[aria-label="Staff navigation"] {
+        display: none !important;
+    }
+
+    .main-wrapper {
+        margin-left: 0 !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+    }
+}
