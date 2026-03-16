@@ -60,20 +60,36 @@
         }
 
         dropdown.innerHTML = notifs.slice(0, 15).map(function (n) {
-            return '<li>' +
-                '<a class="dropdown-item small notif-item' + (n.is_read ? '' : ' fw-bold') + '" ' +
-                'href="' + (n.link || '#') + '" data-id="' + n.id + '">' +
+            return '<li class="d-flex align-items-start">' +
+                '<a class="dropdown-item small notif-item flex-grow-1' + (n.is_read ? '' : ' fw-bold') + '" ' +
+                'href="#" data-id="' + n.id + '">' +
                 escHtml(n.message) +
                 '<br><span class="text-muted" style="font-size:.7rem">' +
                 new Date(n.created_time).toLocaleString() + '</span>' +
-                '</a></li>';
+                '</a>' +
+                '<button class="btn btn-sm text-muted notif-delete border-0 px-2" data-id="' + n.id + '" title="Delete">&times;</button>' +
+                '</li>';
         }).join('');
 
         // Mark as read on click
         dropdown.querySelectorAll('.notif-item').forEach(function (item) {
-            item.addEventListener('click', function () {
+            item.addEventListener('click', function (ev) {
+                ev.preventDefault();
                 var nid = item.dataset.id;
                 apiFetch('/api/notifications/' + nid + '/read/', { method: 'PATCH' });
+                item.classList.remove('fw-bold');
+            });
+        });
+
+        // Delete on click
+        dropdown.querySelectorAll('.notif-delete').forEach(function (btn) {
+            btn.addEventListener('click', async function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var nid = btn.dataset.id;
+                await apiFetch('/api/notifications/' + nid + '/delete/', { method: 'DELETE' });
+                btn.closest('li').remove();
+                updateCount();
             });
         });
     });
