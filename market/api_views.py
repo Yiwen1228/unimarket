@@ -362,6 +362,8 @@ def place_order(request):
             for item in items:
                 product = Product.objects.select_for_update().get(id=item['productId'])
                 qty = item['qty']
+                if product.seller_id == customer_id:
+                    raise ValueError(f'You cannot purchase your own product: {product.product_name}.')
                 if product.stock_quantity < qty:
                     raise ValueError(f'Not enough stock for {product.product_name}.')
                 product.stock_quantity -= qty
