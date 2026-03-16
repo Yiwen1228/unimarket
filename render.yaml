@@ -3,10 +3,12 @@ services:
     name: unimarket
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "daphne -b 0.0.0.0 -p $PORT core.asgi:application"
+    startCommand: "daphne -b 0.0.0.0 -p $PORT --http-timeout 120 core.asgi:application"
     envVars:
       - key: RENDER
         value: "1"
+      - key: DJANGO_SETTINGS_MODULE
+        value: "core.settings"
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
