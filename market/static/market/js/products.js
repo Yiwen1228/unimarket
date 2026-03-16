@@ -185,6 +185,29 @@
         document.getElementById('detail-qty').value = 1;
         document.getElementById('detail-qty').max = p.stock_quantity;
 
+        // Disable Add to Cart for own products (same style as Chat with)
+        var addCartBtn = document.getElementById('detail-add-cart');
+        if (addCartBtn) {
+            var isOwnProduct = (typeof CURRENT_CUSTOMER_ID !== 'undefined') && p.seller === CURRENT_CUSTOMER_ID;
+            if (isOwnProduct) {
+                addCartBtn.classList.add('disabled');
+                addCartBtn.style.opacity = '0.5';
+                addCartBtn.style.cursor = 'not-allowed';
+                addCartBtn.setAttribute('title', 'You cannot purchase your own product');
+                addCartBtn.setAttribute('data-bs-toggle', 'tooltip');
+                addCartBtn.setAttribute('data-bs-placement', 'top');
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                    new bootstrap.Tooltip(addCartBtn);
+                }
+            } else {
+                addCartBtn.classList.remove('disabled');
+                addCartBtn.style.opacity = '';
+                addCartBtn.style.cursor = '';
+                addCartBtn.removeAttribute('title');
+                addCartBtn.removeAttribute('data-bs-toggle');
+            }
+        }
+
         // Favorite button state
         var favBtn = document.getElementById('detail-fav-btn');
         var isFav = favoriteIds.has(p.id);
@@ -202,6 +225,12 @@
     // ── Detail panel event bindings ─────────────────────────
     document.getElementById('detail-add-cart').addEventListener('click', function () {
         if (!selectedProduct) return;
+        // Prevent purchasing own product
+        var isOwn = (typeof CURRENT_CUSTOMER_ID !== 'undefined') && selectedProduct.seller === CURRENT_CUSTOMER_ID;
+        if (isOwn) {
+            alert('You cannot purchase your own product.');
+            return;
+        }
         var qty = Math.max(1, parseInt(document.getElementById('detail-qty').value) || 1);
         var maxStock = selectedProduct.stock_quantity || 0;
         if (qty > maxStock) {
