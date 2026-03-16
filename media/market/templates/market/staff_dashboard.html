@@ -1,0 +1,67 @@
+{% extends 'market/base.html' %}
+{% block title %}Staff Dashboard - UofG UNIMarket{% endblock %}
+
+{% block content %}
+<!-- Quick-access cards -->
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-lg-4">
+        <a href="{% url 'staff_orders' %}" class="text-decoration-none">
+            <div class="card product-card h-100">
+                <div class="product-img-placeholder" aria-label="Orders">
+                    <i class="bi bi-list-check fs-1 text-primary" aria-hidden="true"></i>
+                </div>
+                <div class="card-body">
+                    <h2 class="h6">Orders</h2>
+                    <p class="text-muted small">View and process customer orders</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <a href="{% url 'staff_inventory' %}" class="text-decoration-none">
+            <div class="card product-card h-100">
+                <div class="product-img-placeholder" aria-label="Inventory">
+                    <i class="bi bi-box-seam fs-1 text-success" aria-hidden="true"></i>
+                </div>
+                <div class="card-body">
+                    <h2 class="h6">Inventory</h2>
+                    <p class="text-muted small">Update product stock levels</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <a href="{% url 'staff_chat' %}" class="text-decoration-none">
+            <div class="card product-card h-100">
+                <div class="product-img-placeholder" aria-label="Chat">
+                    <i class="bi bi-chat-dots fs-1 text-info" aria-hidden="true"></i>
+                </div>
+                <div class="card-body">
+                    <h2 class="h6">Customer Chat</h2>
+                    <p class="text-muted small">Respond to customer messages</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Bottom sections -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="section-placeholder" aria-label="Recent activity section">
+            <div class="text-center">
+                <i class="bi bi-clock-history fs-2 d-block mb-2" aria-hidden="true"></i>
+                Recent Activity
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="section-placeholder" aria-label="Account status section">
+            <div class="text-center">
+                <i class="bi bi-person-check fs-2 d-block mb-2" aria-hidden="true"></i>
+                Account Status
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

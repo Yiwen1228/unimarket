@@ -1,0 +1,414 @@
+/* UNIMarket Custom Styles — Sidebar Layout, High Contrast & Accessibility */
+
+:root {
+    --brand-primary: #0d6efd;
+    --brand-dark: #212529;
+    --header-dark: #2d3436;
+    --text-main: #212529;
+    --text-muted: #495057;
+    --bg-light: #f8f9fa;
+    --bg-page: #eef0f2;
+    --border-color: #dee2e6;
+    --sidebar-width: 220px;
+    --focus-ring: 0 0 0 3px rgba(13,110,253,.35);
+}
+
+/* Focus indicator for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+body {
+    color: var(--text-main);
+    min-height: 100vh;
+    background: var(--bg-page);
+    margin: 0;
+}
+
+/* ── Skip-to-content link ─────────────────────────── */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--brand-primary);
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 9999;
+    transition: top .2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ── Newsletter Banner ────────────────────────────── */
+.newsletter-banner {
+    background: var(--header-dark);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    border-radius: .5rem;
+}
+
+/* ── Sidebar ──────────────────────────────────────── */
+.sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    background: #fff;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    transition: transform .3s ease;
+}
+.sidebar .nav-link {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: .75rem 1.25rem;
+    border-radius: 0;
+    transition: background .15s;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: var(--bg-light);
+    color: var(--brand-primary);
+}
+.sidebar .nav-link i {
+    margin-right: .5rem;
+    width: 1.25em;
+    text-align: center;
+}
+
+/* ── Main wrapper (right of sidebar) ─────────────── */
+.main-wrapper {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Top header bar ───────────────────────────────── */
+.top-header {
+    background: var(--header-dark);
+    padding: .75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: .5rem;
+}
+.top-header .logo-box {
+    background: #fff;
+    border-radius: .5rem;
+    padding: .5rem .75rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+}
+.top-header .nav-link {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: .375rem .75rem;
+}
+.top-header .nav-link:hover {
+    color: #ccc;
+}
+
+/* ── Content area ─────────────────────────────────── */
+.page-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+/* ── Sidebar hamburger toggle (mobile) ────────────── */
+.sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    padding: .5rem;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+/* ── Sidebar overlay (mobile) ─────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 1035;
+}
+
+/* ── Responsive: collapse sidebar on small screens ── */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    .sidebar-overlay.show {
+        display: block;
+    }
+    .sidebar-toggle {
+        display: inline-block;
+    }
+    .main-wrapper {
+        margin-left: 0;
+    }
+}
+
+/* ── Card hover effect ────────────────────────────── */
+.product-card {
+    transition: box-shadow .2s;
+    border-radius: .5rem;
+}
+.product-card:hover,
+.product-card:focus-within {
+    box-shadow: 0 .25rem .75rem rgba(0,0,0,.15);
+}
+
+/* ── Product image placeholder ────────────────────── */
+.product-img-placeholder {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: .9rem;
+    min-height: 200px;
+}
+.product-img-placeholder.large {
+    min-height: 280px;
+}
+.product-thumb {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: .375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .65rem;
+    color: var(--text-muted);
+}
+
+/* ── Section placeholders (review, related, etc.) ── */
+.section-placeholder {
+    background: var(--bg-light);
+    border: 1px dashed var(--border-color);
+    border-radius: .5rem;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+}
+
+/* ── Favorite button ──────────────────────────────── */
+.btn-fav {
+    border: none;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color .2s;
+}
+.btn-fav.active,
+.btn-fav:hover {
+    color: #dc3545;
+}
+
+/* ── Chat panel ───────────────────────────────────── */
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: .375rem;
+    padding: 1rem;
+    background: #fff;
+}
+.chat-bubble {
+    max-width: 75%;
+    padding: .5rem .75rem;
+    border-radius: .75rem;
+    margin-bottom: .5rem;
+    word-wrap: break-word;
+}
+.chat-bubble.sent {
+    background: var(--brand-primary);
+    color: #fff;
+    margin-left: auto;
+}
+.chat-bubble.received {
+    background: var(--bg-light);
+    color: var(--text-main);
+}
+.chat-sender {
+    font-size: .75rem;
+    font-weight: 600;
+    margin-bottom: .15rem;
+}
+.chat-time {
+    font-size: .65rem;
+    opacity: .7;
+    margin-top: .15rem;
+    text-align: right;
+}
+.chat-history {
+    opacity: .85;
+}
+
+/* ── Loading spinner ─────────────────────────────── */
+.spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--brand-primary);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Form validation states ──────────────────────── */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 .2rem rgba(220,53,69,.25);
+}
+
+/* ── Status badges ────────────────────────────────── */
+.badge-pending { background-color: #ffc107; color: #000; }
+.badge-processing { background-color: #0dcaf0; color: #000; }
+.badge-completed { background-color: #198754; color: #fff; }
+.badge-cancelled { background-color: #dc3545; color: #fff; }
+
+/* ── Responsive table ─────────────────────────────── */
+.table-responsive {
+    border-radius: .375rem;
+}
+
+/* ── Footer ───────────────────────────────────────── */
+footer {
+    background: var(--brand-dark);
+    color: #adb5bd;
+    padding: 1rem 0;
+    margin-top: auto;
+}
+
+/* ── Dark Mode ───────────────────────────────────── */
+[data-theme="dark"] {
+    --brand-dark: #1a1a2e;
+    --header-dark: #16213e;
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --bg-light: #1e1e2f;
+    --bg-page: #121212;
+    --border-color: #333;
+}
+[data-theme="dark"] body {
+    background: var(--bg-page);
+    color: var(--text-main);
+}
+[data-theme="dark"] .sidebar {
+    background: #1a1a2e;
+    border-color: #333;
+}
+[data-theme="dark"] .sidebar .nav-link {
+    color: #ccc;
+}
+[data-theme="dark"] .sidebar .nav-link:hover,
+[data-theme="dark"] .sidebar .nav-link.active {
+    background: #2a2a3d;
+    color: var(--brand-primary);
+}
+[data-theme="dark"] .card {
+    background: #1e1e2f;
+    border-color: #333;
+    color: var(--text-main);
+}
+[data-theme="dark"] .table {
+    color: var(--text-main);
+    --bs-table-bg: transparent;
+}
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background: #2a2a3d;
+    color: #e0e0e0;
+    border-color: #444;
+}
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background: #2a2a3d;
+    color: #e0e0e0;
+}
+[data-theme="dark"] .list-group-item {
+    background: #1e1e2f;
+    border-color: #333;
+    color: var(--text-main);
+}
+[data-theme="dark"] .dropdown-menu {
+    background: #1e1e2f;
+    border-color: #333;
+}
+[data-theme="dark"] .dropdown-item {
+    color: #e0e0e0;
+}
+[data-theme="dark"] .dropdown-item:hover {
+    background: #2a2a3d;
+}
+[data-theme="dark"] .modal-content {
+    background: #1e1e2f;
+    color: var(--text-main);
+}
+[data-theme="dark"] .offcanvas {
+    background: #1e1e2f;
+    color: var(--text-main);
+}
+[data-theme="dark"] footer {
+    background: #0a0a15;
+}
+[data-theme="dark"] .chat-messages {
+    background: #1e1e2f;
+    border-color: #333;
+}
+[data-theme="dark"] .chat-bubble.received {
+    background: #2a2a3d;
+    color: #e0e0e0;
+}
+[data-theme="dark"] .product-img-placeholder,
+[data-theme="dark"] .section-placeholder {
+    background: #2a2a3d;
+    border-color: #444;
+    color: #999;
+}
+[data-theme="dark"] .newsletter-banner {
+    background: #16213e;
+}
+[data-theme="dark"] .top-header {
+    background: #16213e;
+}
+[data-theme="dark"] .logo-box {
+    background: #2a2a3d;
+    color: #e0e0e0;
+}
+
+/* ── Notification dropdown ───────────────────────── */
+#notif-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1050;
+    display: none;
+    padding: .25rem 0;
+}
+#notif-dropdown.show {
+    display: block;
+}
