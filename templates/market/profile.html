@@ -1,0 +1,62 @@
+{% extends 'market/base.html' %}
+{% load static %}
+{% block title %}My Profile - UofG UNIMarket{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4"><i class="bi bi-person-circle" aria-hidden="true"></i> My Profile</h1>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header"><h2 class="h5 mb-0">Account Details</h2></div>
+            <div class="card-body">
+                <form id="profile-form" aria-label="Update profile">
+                    <div class="mb-3">
+                        <label for="prof-username" class="form-label">Username</label>
+                        <input type="text" id="prof-username" class="form-control" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prof-email" class="form-label">Email</label>
+                        <input type="email" id="prof-email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prof-phone" class="form-label">Phone Number</label>
+                        <input type="text" id="prof-phone" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save" aria-hidden="true"></i> Save Changes
+                    </button>
+                </form>
+                <div id="profile-feedback" class="mt-2" role="status" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header"><h2 class="h5 mb-0">Change Password</h2></div>
+            <div class="card-body">
+                <form id="password-form" aria-label="Change password">
+                    <div class="mb-3">
+                        <label for="pw-new" class="form-label">New Password</label>
+                        <input type="password" id="pw-new" class="form-control" required aria-required="true"
+                               minlength="8" placeholder="Min 8 chars, 1 letter, 1 digit">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw-confirm" class="form-label">Confirm Password</label>
+                        <input type="password" id="pw-confirm" class="form-control" required aria-required="true">
+                    </div>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-key" aria-hidden="true"></i> Update Password
+                    </button>
+                </form>
+                <div id="password-feedback" class="mt-2" role="status" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'market/js/profile.js' %}"></script>
+{% endblock %}
