@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'market',
     'rest_framework',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +70,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
+#WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 
 # Database
@@ -118,14 +121,38 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Session timeout: 30 minutes of inactivity
+SESSION_COOKIE_AGE = 1800
+SESSION_SAVE_EVERY_REQUEST = True
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Email backend: prints emails to console in development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ]
+}
+
+# WebSocket 消息通道层配置
+CHANNEL_LAYERS = {
+    "default": {
+        # 本地开发环境：使用内存作为消息队列
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        
+        # 生产环境预留（部署到 Render 时，Yiwen 需要配置 Redis）
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [('127.0.0.1', 6379)],
+        # },
+    },
 }
