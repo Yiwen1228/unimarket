@@ -10,9 +10,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ──────────────────────────────────────────────────────────────
-# Environment detection: set RENDER=1 on Render, locally it's absent
-# ──────────────────────────────────────────────────────────────
+# environment detection
 IS_RENDER = os.environ.get('RENDER', '') == '1'
 
 SECRET_KEY = os.environ.get(
@@ -29,9 +27,7 @@ if IS_RENDER:
         ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
     ALLOWED_HOSTS.append('.onrender.com')
 
-# ──────────────────────────────────────────────────────────────
-# Application definition
-# ──────────────────────────────────────────────────────────────
+# application definition
 
 INSTALLED_APPS = [
     'daphne',
@@ -77,9 +73,7 @@ TEMPLATES = [
 ASGI_APPLICATION = 'core.asgi.application'
 
 
-# ──────────────────────────────────────────────────────────────
-# Database
-# ──────────────────────────────────────────────────────────────
+# database
 
 if IS_RENDER:
     DATABASES = {
@@ -97,9 +91,7 @@ else:
     }
 
 
-# ──────────────────────────────────────────────────────────────
-# Password validation
-# ──────────────────────────────────────────────────────────────
+# password validation
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -109,9 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# ──────────────────────────────────────────────────────────────
-# Internationalization
-# ──────────────────────────────────────────────────────────────
+# internationalization
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -119,9 +109,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ──────────────────────────────────────────────────────────────
-# Static files & Media
-# ──────────────────────────────────────────────────────────────
+# static files and media
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -145,9 +133,7 @@ else:
     MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# ──────────────────────────────────────────────────────────────
-# Session
-# ──────────────────────────────────────────────────────────────
+# session
 
 SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True
@@ -160,16 +146,12 @@ if IS_RENDER:
     CSRF_COOKIE_SECURE = True
 
 
-# ──────────────────────────────────────────────────────────────
-# Default primary key field type
-# ──────────────────────────────────────────────────────────────
+# default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ──────────────────────────────────────────────────────────────
-# Email backend
-# ──────────────────────────────────────────────────────────────
+# email backend
 
 if IS_RENDER and os.environ.get('EMAIL_HOST_USER'):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -185,9 +167,7 @@ else:
     DEFAULT_FROM_EMAIL = 'noreply@unimarket.com'
 
 
-# ──────────────────────────────────────────────────────────────
-# REST Framework
-# ──────────────────────────────────────────────────────────────
+# rest framework
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -196,9 +176,7 @@ REST_FRAMEWORK = {
 }
 
 
-# ──────────────────────────────────────────────────────────────
-# Channel Layers (WebSocket)
-# ──────────────────────────────────────────────────────────────
+# channel layers (websocket)
 
 if IS_RENDER and os.environ.get('REDIS_URL'):
     CHANNEL_LAYERS = {
