@@ -26,7 +26,7 @@ body {
     margin: 0;
 }
 
-/* ── Skip-to-content link ─────────────────────────── */
+/* skip-to-content link */
 .skip-link {
     position: absolute;
     top: -40px;
@@ -39,7 +39,7 @@ body {
 }
 .skip-link:focus { top: 0; }
 
-/* ── Newsletter Banner ────────────────────────────── */
+/* newsletter banner */
 .newsletter-banner {
     background: var(--header-dark);
     color: #fff;
@@ -47,7 +47,7 @@ body {
     border-radius: .5rem;
 }
 
-/* ── Sidebar ──────────────────────────────────────── */
+/* sidebar */
 .sidebar {
     width: var(--sidebar-width);
     min-height: 100vh;
@@ -80,7 +80,7 @@ body {
     text-align: center;
 }
 
-/* ── Main wrapper (right of sidebar) ─────────────── */
+/* main wrapper */
 .main-wrapper {
     margin-left: var(--sidebar-width);
     min-height: 100vh;
@@ -88,7 +88,7 @@ body {
     flex-direction: column;
 }
 
-/* ── Top header bar ───────────────────────────────── */
+/* top header bar */
 .top-header {
     background: var(--header-dark);
     padding: .75rem 1.5rem;
@@ -115,13 +115,13 @@ body {
     color: #ccc;
 }
 
-/* ── Content area ─────────────────────────────────── */
+/* content area */
 .page-content {
     flex: 1;
     padding: 1.5rem;
 }
 
-/* ── Sidebar hamburger toggle (mobile) ────────────── */
+/* sidebar toggle (mobile) */
 .sidebar-toggle {
     display: none;
     background: none;
@@ -132,7 +132,7 @@ body {
     color: var(--text-main);
 }
 
-/* ── Sidebar overlay (mobile) ─────────────────────── */
+/* sidebar overlay (mobile) */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -141,7 +141,7 @@ body {
     z-index: 1035;
 }
 
-/* ── Responsive: collapse sidebar on small screens ── */
+/* responsive sidebar */
 @media (max-width: 991.98px) {
     .sidebar {
         transform: translateX(-100%);
@@ -160,7 +160,7 @@ body {
     }
 }
 
-/* ── Card hover effect ────────────────────────────── */
+/* card hover effect */
 .product-card {
     transition: box-shadow .2s;
     border-radius: .5rem;
@@ -170,7 +170,7 @@ body {
     box-shadow: 0 .25rem .75rem rgba(0,0,0,.15);
 }
 
-/* ── Dashboard shortcut cards ────────────────────── */
+/* dashboard shortcut cards */
 .dash-shortcut {
     border-radius: .75rem;
     transition: transform .2s, box-shadow .2s;
@@ -201,7 +201,7 @@ body {
     color: #e0e0e0;
 }
 
-/* ── Product image placeholder ────────────────────── */
+/* product image placeholder */
 .product-img-placeholder {
     background: var(--bg-light);
     border: 1px solid var(--border-color);
@@ -229,7 +229,7 @@ body {
     color: var(--text-muted);
 }
 
-/* ── Section placeholders (review, related, etc.) ── */
+/* section placeholders */
 .section-placeholder {
     background: var(--bg-light);
     border: 1px dashed var(--border-color);
@@ -242,7 +242,7 @@ body {
     color: var(--text-muted);
 }
 
-/* ── Favorite button ──────────────────────────────── */
+/* favorite button */
 .btn-fav {
     border: none;
     background: transparent;
@@ -256,7 +256,7 @@ body {
     color: #dc3545;
 }
 
-/* ── Chat panel ───────────────────────────────────── */
+/* chat panel */
 .chat-messages {
     height: 400px;
     overflow-y: auto;
@@ -296,7 +296,7 @@ body {
     opacity: .85;
 }
 
-/* ── Loading spinner ─────────────────────────────── */
+/* loading spinner */
 .spinner {
     display: inline-block;
     width: 1.5rem;
@@ -308,25 +308,25 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Form validation states ──────────────────────── */
+/* form validation states */
 .form-control.is-invalid,
 .form-select.is-invalid {
     border-color: #dc3545;
     box-shadow: 0 0 0 .2rem rgba(220,53,69,.25);
 }
 
-/* ── Status badges ────────────────────────────────── */
+/* status badges */
 .badge-pending { background-color: #ffc107; color: #000; }
 .badge-processing { background-color: #0dcaf0; color: #000; }
 .badge-completed { background-color: #198754; color: #fff; }
 .badge-cancelled { background-color: #dc3545; color: #fff; }
 
-/* ── Responsive table ─────────────────────────────── */
+/* responsive table */
 .table-responsive {
     border-radius: .375rem;
 }
 
-/* ── Footer ───────────────────────────────────────── */
+/* footer */
 footer {
     background: var(--brand-dark);
     color: #adb5bd;
@@ -334,7 +334,7 @@ footer {
     margin-top: auto;
 }
 
-/* ── Dark Mode ───────────────────────────────────── */
+/* dark mode */
 [data-theme="dark"] {
     --brand-dark: #1a1a2e;
     --header-dark: #16213e;
@@ -431,7 +431,7 @@ footer {
     color: #e0e0e0;
 }
 
-/* ── Notification dropdown ───────────────────────── */
+/* notification dropdown */
 #notif-dropdown {
     position: absolute;
     top: 100%;

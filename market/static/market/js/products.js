@@ -1,11 +1,8 @@
-/**
- * products.js — Product listing, search, detail view, and favorites toggle (AJAX).
- * Uses global Cart module from cart.js for cart operations.
- */
+// product listing page
 (function () {
     'use strict';
 
-    // ── State ───────────────────────────────────────────────
+    // state
     var allProducts = [];
     var favoriteIds = new Set();
     var selectedProduct = null;
@@ -15,7 +12,7 @@
     var categoryFilter = document.getElementById('category-filter');
     var detailPanel = document.getElementById('product-detail');
 
-    // ── Load data ───────────────────────────────────────────
+    // load data
     var currentPage = 1;
     var totalCount = 0;
     var pageSize = 50;
@@ -77,7 +74,7 @@
         });
     }
 
-    // ── Render product grid ─────────────────────────────────
+    // render product grid
     function renderProducts(products) {
         if (!products.length) {
             grid.innerHTML = '<p class="text-muted col">No products found.</p>';
@@ -121,7 +118,7 @@
         });
     }
 
-    // ── Product detail view ─────────────────────────────────
+    // product detail view
     function showDetail(productId) {
         var p = allProducts.find(function (x) { return x.id === productId; });
         if (!p) return;
@@ -222,7 +219,7 @@
         detailPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // ── Detail panel event bindings ─────────────────────────
+    // detail panel event bindings
     document.getElementById('detail-add-cart').addEventListener('click', function () {
         if (!selectedProduct) return;
         // Prevent purchasing own product
@@ -259,7 +256,7 @@
         toggleFavoriteById(selectedProduct.id);
     });
 
-    // ── Favorites toggle (AJAX, no reload) ──────────────────
+    // favorites toggle
     async function toggleFavorite(btn) {
         var productId = Number(btn.dataset.id);
         var res = await apiFetch('/api/favorites/toggle/', {
@@ -297,7 +294,7 @@
         }
     }
 
-    // ── Related products ──────────────────────────────────────
+    // related products
     function renderRelated(product) {
         var el = document.getElementById('related-products');
         if (!el) return;
@@ -322,7 +319,7 @@
         });
     }
 
-    // ── Pagination ────────────────────────────────────────────
+    // pagination
     function renderPagination() {
         var pager = document.getElementById('product-pagination');
         if (!pager) return;
@@ -343,14 +340,15 @@
         });
     }
 
-    // ── Helpers ──────────────────────────────────────────────
+    // helpers
+    // quick fix for now
     function escHtml(str) {
         var d = document.createElement('div');
         d.textContent = str;
         return d.innerHTML;
     }
 
-    // ── Event listeners ─────────────────────────────────────
+    // event listeners
     var debounceTimer;
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
@@ -363,7 +361,7 @@
         loadProducts(searchInput.value, categoryFilter.value);
     });
 
-    // ── Init ────────────────────────────────────────────────
+    // init
     async function init() {
         await loadFavorites();
         await loadProducts();

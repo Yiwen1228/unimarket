@@ -1,7 +1,4 @@
-/**
- * cart.js — Global cart module using localStorage.
- * Loaded on every page so cart badge updates everywhere.
- */
+// cart module using localStorage
 var Cart = (function () {
     'use strict';
 
@@ -47,6 +44,7 @@ var Cart = (function () {
         return getItems().reduce(function (s, c) { return s + c.qty; }, 0);
     }
 
+    // this works but could be cleaner
     function escHtml(str) {
         var d = document.createElement('div');
         d.textContent = str;

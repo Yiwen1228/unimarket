@@ -1,6 +1,4 @@
-/**
- * dashboard.js — Publish product form + My Published Products list with edit/delete.
- */
+// dashboard page - publish form and product management
 (function () {
     'use strict';
 
@@ -14,7 +12,7 @@
         return d.innerHTML;
     }
 
-    /* ── Load my published products ──────────────────────── */
+    // load my published products
     async function loadMyProducts() {
         if (!container) return;
         try {
@@ -107,7 +105,7 @@
         });
     }
 
-    /* ── Edit product (inline modal) ─────────────────────── */
+    // edit product (inline modal)
     function openEditModal(p) {
         // Reuse the publish form for editing
         document.getElementById('pub-name').value = p.product_name;
@@ -175,7 +173,7 @@
         });
     }
 
-    /* ── Delete product ──────────────────────────────────── */
+    // delete product
     async function deleteProduct(pid) {
         var res = await apiFetch('/api/products/' + pid + '/delete/', { method: 'DELETE' });
         if (res.ok) {
@@ -187,7 +185,7 @@
         }
     }
 
-    /* ── Named publish handler so we can detach/reattach ── */
+    // named publish handler so we can detach/reattach
     var publishHandler = async function (e) {
         e.preventDefault();
         var name = document.getElementById('pub-name').value.trim();
@@ -215,6 +213,7 @@
         if (imageInput && imageInput.files[0]) {
             fd.append('image', imageInput.files[0]);
         }
+        // console.log('form data:', data);
 
         var res = await apiFetch('/api/products/publish/', {
             method: 'POST',
@@ -242,7 +241,7 @@
         form.addEventListener('submit', publishHandler);
     }
 
-    /* ── Recent Activity ────────────────────────────────── */
+    // recent activity
     async function loadRecentActivity() {
         var el = document.getElementById('recent-activity');
         if (!el) return;
@@ -262,7 +261,7 @@
             }).join('') + '</ul>';
     }
 
-    /* ── Account Status ──────────────────────────────────── */
+    // account status
     async function loadAccountStatus() {
         var el = document.getElementById('account-status');
         if (!el) return;
@@ -290,7 +289,7 @@
             '</div>';
     }
 
-    /* ── Load categories dynamically ──────────────────── */
+    // load categories dynamically
     async function loadCategories() {
         var sel = document.getElementById('pub-category');
         if (!sel) return;

@@ -1,7 +1,4 @@
-/**
- * notifications.js — Notification bell polling + dropdown display.
- * Loaded for both customer and staff roles.
- */
+// notification bell and dropdown
 (function () {
     'use strict';
 
@@ -16,7 +13,7 @@
         return d.innerHTML;
     }
 
-    /* ── Poll unread count every 30 seconds ────────────── */
+    // poll unread count every 30s
     async function updateCount() {
         try {
             var res = await apiFetch('/api/notifications/count/');
@@ -32,9 +29,9 @@
     }
 
     updateCount();
-    setInterval(updateCount, 30000);
+    setInterval(updateCount, 30000); // this works but could be cleaner
 
-    /* ── Show dropdown on bell click ──────────────────── */
+    // show dropdown on bell click
     bell.addEventListener('click', async function (e) {
         e.preventDefault();
         e.stopPropagation();

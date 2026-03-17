@@ -1,6 +1,4 @@
-/**
- * staff_inventory.js — Staff inventory management page.
- */
+// staff inventory management
 (function () {
     'use strict';
 
@@ -106,7 +104,7 @@
         return d.innerHTML;
     }
 
-    /* ── CSV Export ─────────────────────────────────────── */
+    // csv export
     var exportBtn = document.getElementById('export-inventory-csv');
     if (exportBtn) {
         exportBtn.addEventListener('click', function () {

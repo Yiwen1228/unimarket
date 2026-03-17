@@ -1,6 +1,4 @@
-/**
- * staff_orders.js — Staff order management page.
- */
+// staff order management
 (function () {
     'use strict';
 
@@ -72,7 +70,7 @@
         return d.innerHTML;
     }
 
-    /* ── CSV Export ─────────────────────────────────────── */
+    // csv export
     var exportBtn = document.getElementById('export-orders-csv');
     if (exportBtn) {
         exportBtn.addEventListener('click', function () {

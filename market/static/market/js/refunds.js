@@ -1,6 +1,4 @@
-/**
- * refunds.js — Customer "My Refunds" page.
- */
+// my refunds page
 (function () {
     'use strict';
 

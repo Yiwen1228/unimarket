@@ -1,6 +1,4 @@
-/**
- * favorites.js — Customer favorites page (AJAX).
- */
+// favorites page
 (function () {
     'use strict';
 

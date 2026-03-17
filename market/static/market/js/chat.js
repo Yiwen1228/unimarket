@@ -1,8 +1,4 @@
-/**
- * chat.js — WebSocket real-time chat client (S2).
- * Expects CHAT_SENDER, CHAT_ROLE, CHAT_ROOM to be set in the template.
- * Supports message history on connect, timestamps, and typing indicator.
- */
+// websocket chat client
 (function () {
     'use strict';
 
@@ -21,7 +17,7 @@
     let reconnectAttempts = 0;
     let historyDone = false;
 
-    /* ── Typing indicator state ───────────────────────── */
+    // typing indicator state
     let typingTimer = null;
     let typingClearTimer = null;
     var typingIndicator = document.createElement('p');
@@ -125,7 +121,7 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    /* ── Send typing event (debounced, max once per 2s) ─ */
+    // send typing event (debounced)
     function sendTypingEvent() {
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'typing', sender: CHAT_SENDER }));

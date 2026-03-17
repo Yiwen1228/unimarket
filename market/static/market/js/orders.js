@@ -1,7 +1,4 @@
-/**
- * orders.js — Customer "My Orders" page with refund request support
- *             and inline Chat with Seller / Chat for Help buttons.
- */
+// my orders page
 (function () {
     'use strict';
 
@@ -107,7 +104,7 @@
                         }).join('') +
                         '</tbody></table>' +
                     '<p class="fw-bold mb-3">Total: &pound;' + Number(o.total_amount).toFixed(2) + '</p>' +
-                    /* ── Chat + Confirm + Print buttons ── */
+                    /* chat + confirm + print buttons */
                     '<div class="d-flex flex-wrap align-items-center">' +
                         confirmBtn +
                         sellerChatBtns +
@@ -199,7 +196,7 @@
         });
     }
 
-    /* ── Print Invoice ──────────────────────────────────── */
+    // print invoice
     function printInvoice(o) {
         var itemsHtml = o.items.map(function (it) {
             return '<tr><td>' + escHtml(it.product_name) + '</td>' +

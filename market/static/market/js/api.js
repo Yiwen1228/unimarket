@@ -1,6 +1,4 @@
-/**
- * api.js — Shared API helper + CSRF token handling for UNIMarket.
- */
+// shared api helpers and csrf handling
 
 function getCookie(name) {
     var cookies = document.cookie.split(';');
@@ -13,9 +11,7 @@ function getCookie(name) {
     return null;
 }
 
-/**
- * Read CSRF token fresh each call so it picks up any new cookie.
- */
+// read csrf token fresh each call so it picks up any new cookie
 function getCSRFToken() {
     // Try cookie first
     var token = getCookie('csrftoken');
@@ -28,9 +24,7 @@ function getCSRFToken() {
     return '';
 }
 
-/**
- * Wrapper around fetch that includes CSRF token and JSON headers.
- */
+// wrapper around fetch that includes csrf token and json headers
 async function apiFetch(url, options) {
     options = options || {};
     var isFormData = options.body instanceof FormData;
@@ -38,6 +32,7 @@ async function apiFetch(url, options) {
         'X-CSRFToken': getCSRFToken(),
     };
     // Only set Content-Type for non-FormData (browser sets it with boundary for FormData)
+    // TODO: maybe move this to a shared file later
     if (!isFormData) {
         defaultHeaders['Content-Type'] = 'application/json';
     }

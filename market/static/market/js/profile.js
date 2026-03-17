@@ -1,6 +1,4 @@
-/**
- * profile.js — Load and update customer profile + password change.
- */
+// profile page
 (function () {
     'use strict';
 
@@ -10,7 +8,7 @@
         return d.innerHTML;
     }
 
-    /* ── Load profile ──────────────────────────────────── */
+    // load profile
     async function loadProfile() {
         var res = await apiFetch('/api/customer/profile/');
         if (!res.ok) return;
@@ -20,7 +18,7 @@
         document.getElementById('prof-phone').value = data.phone_number || '';
     }
 
-    /* ── Save profile ──────────────────────────────────── */
+    // save profile
     var profileForm = document.getElementById('profile-form');
     var profileFb = document.getElementById('profile-feedback');
     if (profileForm) {
@@ -40,7 +38,7 @@
         });
     }
 
-    /* ── Change password ───────────────────────────────── */
+    // change password
     var pwForm = document.getElementById('password-form');
     var pwFb = document.getElementById('password-feedback');
     if (pwForm) {

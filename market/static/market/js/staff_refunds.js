@@ -1,6 +1,4 @@
-/**
- * staff_refunds.js — Staff refund request management.
- */
+// staff refund management
 (function () {
     'use strict';
 
