@@ -15,13 +15,11 @@ from django.db import transaction
 from decimal import Decimal
 import secrets
 
-# ── Password & rate-limit helpers ──────────────────────────
 MAX_LOGIN_ATTEMPTS = 5
-LOCKOUT_SECONDS = 300  # 5 minutes
+LOCKOUT_SECONDS = 300  # 5 min
 
 
 def validate_password(password):
-    """Enforce minimum password complexity."""
     if len(password) < 8:
         return 'Password must be at least 8 characters.'
     if not re.search(r'[A-Za-z]', password):
@@ -32,7 +30,6 @@ def validate_password(password):
 
 
 def check_rate_limit(email):
-    """Return error message if too many failed login attempts."""
     key = f'login_fail_{email}'
     attempts = cache.get(key, 0)
     if attempts >= MAX_LOGIN_ATTEMPTS:
@@ -51,7 +48,6 @@ def clear_failed_login(email):
 
 
 def create_notification(recipient_type, recipient_id, message, link=''):
-    """Create a notification for a customer or staff member."""
     Notification.objects.create(
         recipient_type=recipient_type,
         recipient_id=recipient_id,
@@ -187,7 +183,6 @@ def customer_profile(request):
             'phone_number': customer.phone_number,
         })
 
-    # PATCH — update profile fields
     if 'email' in request.data:
         new_email = request.data['email'].strip()
         if Customer.objects.filter(email=new_email).exclude(id=customer_id).exists():
@@ -207,7 +202,6 @@ def customer_profile(request):
 @api_view(['GET'])
 def product_list(request):
     products = Product.objects.select_related('seller').filter(is_active=True)
-    # Search by product name (M3)
     search = request.GET.get('search', '').strip()
     if search:
         products = products.filter(product_name__icontains=search)
@@ -215,7 +209,6 @@ def product_list(request):
     if category:
         products = products.filter(category__iexact=category)
 
-    # Pagination: ?page=1&page_size=20
     page = int(request.GET.get('page', 1))
     page_size = min(int(request.GET.get('page_size', 50)), 100)
     total = products.count()
@@ -277,14 +270,12 @@ def my_products(request):
     products = Product.objects.filter(seller_id=customer_id).order_by('-id')
     serializer = ProductSerializer(products, many=True, context={'request': request})
     data = serializer.data
-    # Check which products have been sold (exist in completed orders)
     sold_product_ids = set(
         OrderItem.objects.filter(
             product__seller_id=customer_id,
             order__status='completed'
         ).values_list('product_id', flat=True)
     )
-    # Check which products have ANY orders (for delete protection)
     ordered_product_ids = set(
         OrderItem.objects.filter(
             product__seller_id=customer_id
@@ -307,7 +298,7 @@ def update_product(request, product_id):
     except Product.DoesNotExist:
         return Response({'error': 'Product not found or not yours.'}, status=404)
 
-    # Prevent editing sold products
+    # cant edit if already sold
     if OrderItem.objects.filter(product=product, order__status='completed').exists():
         return Response({'error': 'Cannot edit a product that has been sold.'}, status=400)
 
@@ -336,7 +327,6 @@ def delete_product(request, product_id):
         product = Product.objects.get(id=product_id, seller_id=customer_id)
     except Product.DoesNotExist:
         return Response({'error': 'Product not found or not yours.'}, status=404)
-    # Prevent deleting products that have any orders (to preserve order history)
     if OrderItem.objects.filter(product=product).exists():
         return Response({'error': 'Cannot delete a product that has been ordered. You can set stock to 0 instead.'}, status=400)
     product.delete()
@@ -398,7 +388,6 @@ def my_orders(request):
 
 @api_view(['PATCH'])
 def confirm_receipt(request, order_id):
-    """Buyer confirms receipt of an order — changes status to completed."""
     customer_id = request.session.get('customer_id')
     if not customer_id:
         return Response({'error': 'Not authenticated.'}, status=401)
@@ -410,7 +399,6 @@ def confirm_receipt(request, order_id):
         return Response({'error': 'Only pending orders can be confirmed.'}, status=400)
     order.status = 'completed'
     order.save()
-    # Notify sellers about the confirmed receipt
     seller_ids = set()
     for item in order.items.select_related('product'):
         if item.product and item.product.seller_id:
@@ -477,7 +465,6 @@ def update_inventory(request, product_id):
 
 @api_view(['PATCH'])
 def toggle_product_active(request, product_id):
-    """Staff can delist (deactivate) or relist (reactivate) a product."""
     if request.session.get('role') != 'staff':
         return Response({'error': 'Not authenticated.'}, status=401)
     try:
@@ -485,7 +472,6 @@ def toggle_product_active(request, product_id):
         product.is_active = not product.is_active
         product.save()
         action = 'relisted' if product.is_active else 'delisted'
-        # Notify the seller
         if product.seller_id:
             create_notification(
                 'customer', product.seller_id,
@@ -496,8 +482,6 @@ def toggle_product_active(request, product_id):
     except Product.DoesNotExist:
         return Response({'error': 'Product not found.'}, status=404)
 
-
-# ── Favorites (C1) ──────────────────────────────────────────────
 
 @api_view(['GET'])
 def favorite_list(request):
@@ -530,8 +514,6 @@ def favorite_toggle(request):
         return Response({'status': 'removed'})
     return Response({'status': 'added'}, status=201)
 
-
-# ── Refund Requests ────────────────────────────────────────────
 
 @api_view(['POST'])
 def create_refund(request):
@@ -621,7 +603,6 @@ def process_refund(request, refund_id):
             order.status = 'cancelled'
             order.save()
 
-    # Create notification for customer
     create_notification(
         'customer', refund.customer_id,
         f'Your refund request #{refund.id} has been {new_status}.',
@@ -630,8 +611,6 @@ def process_refund(request, refund_id):
 
     return Response({'message': f'Refund {new_status}.'})
 
-
-# ── Email Verification ────────────────────────────────────────
 
 @api_view(['GET'])
 def verify_email_api(request):
@@ -647,8 +626,6 @@ def verify_email_api(request):
     except Customer.DoesNotExist:
         return Response({'error': 'Invalid or expired token.'}, status=400)
 
-
-# ── Forgot / Reset Password ──────────────────────────────────
 
 @api_view(['POST'])
 def forgot_password(request):
@@ -666,7 +643,7 @@ def forgot_password(request):
         from .utils import send_password_reset_email
         send_password_reset_email(customer, request)
     except Customer.DoesNotExist:
-        pass  # Don't reveal whether the email exists
+        pass  # dont reveal if email exists or not
     return Response({'message': 'If that email is registered, a reset link has been sent.'})
 
 
@@ -692,8 +669,6 @@ def reset_password(request):
     customer.save()
     return Response({'message': 'Password reset successfully. You can now log in.'})
 
-
-# ── Notifications ─────────────────────────────────────────────
 
 @api_view(['GET'])
 def notification_list(request):
@@ -757,8 +732,6 @@ def notification_delete(request, notif_id):
         return Response({'error': 'Notification not found.'}, status=404)
 
 
-# ── Seller Stats ──────────────────────────────────────────────
-
 @api_view(['GET'])
 def seller_stats(request):
     customer_id = request.session.get('customer_id')
@@ -778,8 +751,6 @@ def seller_stats(request):
     })
 
 
-# ── Categories ────────────────────────────────────────────────
-
 @api_view(['GET'])
 def category_list(request):
     categories = Category.objects.all().order_by('name')
@@ -787,11 +758,7 @@ def category_list(request):
     return Response(serializer.data)
 
 
-# ── Chat Rooms ───────────────────────────────────────────────
-
 def _parse_seller_room(room_name):
-    """Parse room names like 'seller3p5' → (seller_id=3, product_id=5)
-       or legacy 'seller3' → (seller_id=3, product_id=None)."""
     import re as _re
     m = _re.match(r'^seller(\d+)p(\d+)$', room_name)
     if m:
@@ -804,62 +771,50 @@ def _parse_seller_room(room_name):
 
 @api_view(['GET'])
 def chat_rooms(request):
-    """Return list of chat rooms the current user has participated in."""
     role = request.session.get('role')
     if role == 'customer':
         username = request.session.get('customer_username', '')
         customer_id = request.session.get('customer_id')
-        # Rooms where this customer sent messages
         sent_rooms = set(
             ChatMessage.objects.filter(sender=username)
             .values_list('room_name', flat=True)
         )
-        # Also include rooms where this customer is the seller being contacted
-        # Match both new format (seller{id}p{pid}) and legacy (seller{id})
+        # also check rooms where this user is the seller
         all_room_names = set(ChatMessage.objects.values_list('room_name', flat=True))
         for rn in all_room_names:
             sid, _ = _parse_seller_room(rn)
             if sid == customer_id:
                 sent_rooms.add(rn)
-        # Each customer has their own private support room
         my_support = f'support_c{customer_id}'
         sent_rooms.add(my_support)
-        # Remove legacy shared 'support' room if present
         sent_rooms.discard('support')
         user_rooms = list(sent_rooms)
     elif role == 'staff':
         staff_username = request.session.get('staff_username', '')
-        # Staff sees all support_c* rooms (individual customer support chats)
-        # plus any other rooms staff has participated in
         staff_rooms = set(
             ChatMessage.objects.filter(sender=staff_username)
             .values_list('room_name', flat=True)
         )
-        # Also include all support rooms that have messages (so staff can see pending requests)
         support_rooms = set(
             ChatMessage.objects.filter(room_name__startswith='support_c')
             .values_list('room_name', flat=True)
         )
         staff_rooms.update(support_rooms)
-        # Remove legacy shared 'support' room
         staff_rooms.discard('support')
         user_rooms = list(staff_rooms)
     else:
         return Response({'error': 'Not authenticated.'}, status=401)
 
-    # Build room info with last message and display name
     rooms = []
     for room_name in user_rooms:
         last_msg = ChatMessage.objects.filter(room_name=room_name).order_by('-timestamp').first()
 
-        # Derive display name and product info from room name
         display_name = f'Room: {room_name}'
         product_info = None
 
         if room_name == 'support':
             display_name = 'Customer Support'
         elif room_name.startswith('support_c'):
-            # Private support room: support_c{customer_id}
             import re as _re
             m = _re.match(r'^support_c(\d+)$', room_name)
             if m:
@@ -877,7 +832,6 @@ def chat_rooms(request):
                 display_name = 'Customer Support'
         elif room_name.startswith('seller'):
             seller_id, product_id = _parse_seller_room(room_name)
-            # Display seller name
             if seller_id:
                 try:
                     seller = Customer.objects.get(id=seller_id)
@@ -885,7 +839,6 @@ def chat_rooms(request):
                 except Customer.DoesNotExist:
                     display_name = f'Room: {room_name}'
 
-            # Get product info from room name (new format) or from messages (legacy)
             if product_id:
                 try:
                     p = Product.objects.get(id=product_id)
@@ -898,7 +851,6 @@ def chat_rooms(request):
                 except Product.DoesNotExist:
                     pass
 
-        # Fallback: find product from messages if not already found
         if not product_info:
             product_msg = ChatMessage.objects.filter(
                 room_name=room_name, product__isnull=False
@@ -921,20 +873,16 @@ def chat_rooms(request):
             'product': product_info,
         })
 
-    # Sort: rooms with recent messages first
     rooms.sort(key=lambda r: r['last_time'] or '', reverse=True)
     return Response(rooms)
 
 
 @api_view(['DELETE'])
 def delete_chat_room(request, room_name):
-    """Delete all messages in a chat room (clear chat history)."""
     role = request.session.get('role')
     if role == 'customer':
         username = request.session.get('customer_username', '')
         customer_id = request.session.get('customer_id')
-        # Customers can only delete rooms they participate in
-        # Check: either they sent messages or they are the seller
         is_participant = ChatMessage.objects.filter(room_name=room_name, sender=username).exists()
         sid, _ = _parse_seller_room(room_name)
         is_seller = (sid == customer_id)
@@ -945,7 +893,6 @@ def delete_chat_room(request, room_name):
     else:
         return Response({'error': 'Not authenticated.'}, status=401)
 
-    # Cannot delete support rooms
     if room_name == 'support' or room_name.startswith('support_c'):
         return Response({'error': 'Cannot delete support chat rooms.'}, status=400)
 

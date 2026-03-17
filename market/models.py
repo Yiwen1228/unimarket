@@ -30,7 +30,7 @@ class Product(models.Model):
     seller = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
     description = models.TextField(blank=True, default='')
     image = models.ImageField(upload_to='products/', blank=True, null=True)
-    is_active = models.BooleanField(default=True)  # Staff can delist products
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.product_name

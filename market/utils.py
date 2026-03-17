@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 def _send_mail_async(**kwargs):
-    """Send email in a background thread so the HTTP response is not blocked."""
     try:
         send_mail(**kwargs)
     except Exception:
@@ -15,7 +14,6 @@ def _send_mail_async(**kwargs):
 
 
 def send_verification_email(customer, request=None):
-    """Send an email with a verification link."""
     token = customer.verification_token
     if request:
         base_url = request.build_absolute_uri('/verify/')
@@ -40,7 +38,6 @@ def send_verification_email(customer, request=None):
 
 
 def send_password_reset_email(customer, request=None):
-    """Send an email with a password reset link."""
     token = customer.password_reset_token
     if request:
         base_url = request.build_absolute_uri('/reset-password/')

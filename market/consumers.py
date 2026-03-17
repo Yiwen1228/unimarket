@@ -5,10 +5,6 @@ from .models import ChatMessage
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    """
-    WebSocket consumer for real-time customer-staff chat (User Story S2).
-    Messages are persisted to the database and history is loaded on connect.
-    """
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -20,7 +16,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
 
-        # Send last 50 messages as history
         history = await self.get_history()
         for msg in history:
             await self.send(text_data=json.dumps({
@@ -40,7 +35,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
 
-        # Typing indicator — broadcast without persisting
         if data.get('type') == 'typing':
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -59,10 +53,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not message:
             return
 
-        # Persist to database
         ts = await self.save_message(sender, role, message, product_id)
-
-        # Broadcast to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
